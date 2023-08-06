@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo67.mapper.ReportMapper">
+    <resultMap id="base" type="com.example.demo67.entity.Report">
+        <id property="reportId" column="report_id" jdbcType="INTEGER"/>
+        <result property="reportName" column="report_name" jdbcType="VARCHAR"/>
+        <result property="reportDetails" column="report_details" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insertReport">
+        INSERT INTO tb_report ( report_name, report_details )
+            VALUE
+            (
+	#{reportName},
+	#{reportDetails})
+    </insert>
+    <select id="getAllReports" resultMap="base">
+        select * from tb_report
+    </select>
+
+</mapper>

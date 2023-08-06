@@ -1,4 +1,4 @@
-package report.entity;
+package com.example.demo67.report.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

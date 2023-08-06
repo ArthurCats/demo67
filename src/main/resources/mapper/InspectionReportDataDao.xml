@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo67.report.dao.InspectionReportDataDao">
+
+    <resultMap type="com.example.demo67.report.entity.InspectionReportData" id="InspectionReportDataMap">
+        <result property="reportId" column="report_id" jdbcType="INTEGER"/>
+        <result property="reportName" column="report_name" jdbcType="VARCHAR"/>
+        <result property="taskName" column="task_name" jdbcType="VARCHAR"/>
+        <result property="taskType" column="task_type" jdbcType="VARCHAR"/>
+        <result property="receiveName" column="receive_name" jdbcType="VARCHAR"/>
+        <result property="inspectionResult" column="inspection_result" jdbcType="INTEGER"/>
+        <result property="inspectionTime" column="inspection_time" jdbcType="TIMESTAMP"/>
+        <result property="sendTime" column="send_time" jdbcType="TIMESTAMP"/>
+        <result property="sendType" column="send_type" jdbcType="VARCHAR"/>
+        <result property="sqlUtilsDetailList" column="sql_utils_detail_list" jdbcType="VARCHAR"/>
+        <result property="pythonUtilsDetailList" column="python_utils_detail_list" jdbcType="VARCHAR"/>
+        <result property="apiUtilsDetailList" column="api_utils_detail_list" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="InspectionReportDataMap">
+        select report_id,
+               report_name,
+               task_name,
+               task_type,
+               receive_name,
+               inspection_result,
+               inspection_time,
+               send_time,
+               send_type,
+               sql_utils_detail_list,
+               python_utils_detail_list,
+               api_utils_detail_list
+        from inspection_report_data
+        where report_id = #{reportId}
+    </select>
+    <!-- 批量查询-->
+    <select id="getReportDataByList" resultMap="InspectionReportDataMap" parameterType="list">
+        select report_id,
+               report_name,
+               task_name,
+               task_type,
+               receive_name,
+               inspection_result,
+               inspection_time,
+               send_time,
+               send_type,
+               sql_utils_detail_list,
+               python_utils_detail_list,
+               api_utils_detail_list
+        from inspection_report_data
+        <where>
+            <if test="list != null and list.size() > 0">
+                AND report_id in 
+                <foreach collection="list" item="id" open="(" separator="," close=")" >
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="reportId" useGeneratedKeys="true">
+        insert into inspection_report_data(report_name, task_name, task_type, receive_name, inspection_result,
+                                           inspection_time, send_time, send_type, sql_utils_detail_list,
+                                           python_utils_detail_list, api_utils_detail_list)
+        values (#{reportName}, #{taskName}, #{taskType}, #{receiveName}, #{inspectionResult}, #{inspectionTime},
+                #{sendTime}, #{sendType}, #{sqlUtilsDetailList}, #{pythonUtilsDetailList}, #{apiUtilsDetailList})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update inspection_report_data
+        <set>
+            <if test="reportName != null and reportName != ''">
+                report_name = #{reportName},
+            </if>
+            <if test="taskName != null and taskName != ''">
+                task_name = #{taskName},
+            </if>
+            <if test="taskType != null and taskType != ''">
+                task_type = #{taskType},
+            </if>
+            <if test="receiveName != null and receiveName != ''">
+                receive_name = #{receiveName},
+            </if>
+            <if test="inspectionResult != null">
+                inspection_result = #{inspectionResult},
+            </if>
+            <if test="inspectionTime != null">
+                inspection_time = #{inspectionTime},
+            </if>
+            <if test="sendTime != null">
+                send_time = #{sendTime},
+            </if>
+            <if test="sendType != null and sendType != ''">
+                send_type = #{sendType},
+            </if>
+            <if test="sqlUtilsDetailList != null and sqlUtilsDetailList != ''">
+                sql_utils_detail_list = #{sqlUtilsDetailList},
+            </if>
+            <if test="pythonUtilsDetailList != null and pythonUtilsDetailList != ''">
+                python_utils_detail_list = #{pythonUtilsDetailList},
+            </if>
+            <if test="apiUtilsDetailList != null and apiUtilsDetailList != ''">
+                api_utils_detail_list = #{apiUtilsDetailList},
+            </if>
+        </set>
+        where report_id = #{reportId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from inspection_report_data
+        where report_id = #{reportId}
+    </delete>
+
+</mapper>
+

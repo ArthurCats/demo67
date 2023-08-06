@@ -1,7 +1,10 @@
-package report.service;
+package com.example.demo67.report.service;
 
-import report.entity.InspectionReportData;
-import report.entity.InspectionReportDataAO;
+import com.example.demo67.report.entity.InspectionReportData;
+import com.example.demo67.report.entity.InspectionReportDataAO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 
 /**
@@ -51,5 +54,22 @@ public interface InspectionReportDataService {
      * @return 结果
      */
     int insertReportDataByAO(InspectionReportDataAO ao);
+
+    /**
+     * 通过id获取报告数据
+     *
+     * @param reportId 报告id
+     * @return ao
+     */
+    InspectionReportDataAO getReportDataById(Integer reportId);
+
+
+    /**
+     * 得到报告数据列表，批量查询
+     *
+     * @param list 列表
+     * @return 结果
+     */
+    List<InspectionReportDataAO> getReportDataByList(List<Integer> list);
 
 }

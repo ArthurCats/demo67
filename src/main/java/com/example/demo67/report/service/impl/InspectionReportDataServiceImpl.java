@@ -1,14 +1,18 @@
-package report.service.impl;
+package com.example.demo67.report.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import report.entity.InspectionReportData;
-import report.dao.InspectionReportDataDao;
-import report.entity.InspectionReportDataAO;
-import report.service.InspectionReportDataService;
+import com.example.demo67.report.dao.InspectionReportDataDao;
+import com.example.demo67.report.entity.InspectionReportData;
+import com.example.demo67.report.entity.InspectionReportDataAO;
+import com.example.demo67.report.service.InspectionReportDataService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * (InspectionReportData)表服务实现类
@@ -68,6 +72,20 @@ public class InspectionReportDataServiceImpl implements InspectionReportDataServ
     }
 
     /**
+     * 通过id获取报告数据,返回ao对象
+     *
+     * @param reportId 报告id
+     * @return {@link InspectionReportDataAO}
+     */
+    @Override
+    public InspectionReportDataAO getReportDataById(Integer reportId) {
+        // 查找
+        InspectionReportData data = queryById(reportId);
+        // 转换
+        return exchangeToAO(data);
+    }
+
+    /**
      * 根据ao来新增报告数据
      *
      * @param ao ao
@@ -95,5 +113,53 @@ public class InspectionReportDataServiceImpl implements InspectionReportDataServ
         data.setSqlUtilsDetailList(sql);
         data.setApiUtilsDetailList(api);
         return this.inspectionReportDataDao.insert(data);
+    }
+
+    /**
+     * 得到报告数据列表，批量查询
+     *
+     * @param list 列表
+     * @return 查询结果
+     */
+    @Override
+    public List<InspectionReportDataAO> getReportDataByList(List<Integer> list){
+        List<InspectionReportData> data = inspectionReportDataDao.getReportDataByList(list);
+        List<InspectionReportDataAO> res = new ArrayList<>();
+        // 数据转换为ao
+        for (InspectionReportData datum : data) {
+            // 转换
+            res.add(exchangeToAO(datum));
+        }
+        return res;
+    }
+
+    /**
+     * 转换为ao
+     *
+     * @param data 数据
+     * @return 处理结果
+     */
+    private InspectionReportDataAO exchangeToAO(InspectionReportData data){
+        // 转换
+        InspectionReportDataAO ao = new InspectionReportDataAO();
+        // 复制相同的属性
+        BeanUtil.copyProperties(data,ao);
+        // 处理3种执行结果
+        Object python = null;
+        Object sql = null;
+        Object api = null;
+        if(!data.getPythonUtilsDetailList().equals("")){
+            python = JSONUtil.parseObj(data.getPythonUtilsDetailList());
+        }
+        if(!data.getSqlUtilsDetailList().equals("")){
+            sql = JSONUtil.parseObj(data.getSqlUtilsDetailList());
+        }
+        if(!data.getApiUtilsDetailList().equals("")){
+            api = JSONUtil.parseObj(data.getApiUtilsDetailList());
+        }
+        ao.setPythonUtilsDetailList(python);
+        ao.setApiUtilsDetailList(api);
+        ao.setSqlUtilsDetailList(sql);
+        return ao;
     }
 }
